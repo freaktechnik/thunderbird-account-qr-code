@@ -43,7 +43,7 @@ const qrInput = encodeAccounts([ {
 
 ## Example usage
 
-You can find the example provided in the `exmample` directory hosted at https://lab.humanoids.be/thunderbird-account-qr-code/example.
+You can find the example provided in the `example` directory hosted at https://lab.humanoids.be/thunderbird-account-qr-code/example.
 
 ## License
 
