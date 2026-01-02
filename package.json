@@ -1,6 +1,6 @@
 {
   "name": "thunderbird-account-qr-code",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Encode E-Mail account info in a QR code for import in Thunderbird for Android\"",
   "main": "index.js",
   "type": "module",
