@@ -1,0 +1,7 @@
+*~
+.*
+.nyc_output
+eslint.config.js
+coverage
+test
+example

@@ -1,0 +1,22 @@
+name: publish
+on:
+  push:
+    tags:
+      - 'v[0-9]+\.[0-9]+\.[0-9]+'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    environment:
+      name: publish
+      url: https://npmjs.com/package/thunderbird-account-qr-code
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          cache: 'npm'
+      - run: npm ci --no-audit
+      - run: npm run lint
+      - run: npm test
+      - run: npm publish
