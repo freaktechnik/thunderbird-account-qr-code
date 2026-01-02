@@ -1,7 +1,7 @@
 # Thunderbird account QR code
 [![codecov](https://codecov.io/gh/freaktechnik/thunderbird-account-qr-code/graph/badge.svg?token=HGWPlqqIdA)](https://codecov.io/gh/freaktechnik/thunderbird-account-qr-code)
 
-Thunderbird for Android allows importing accounts through a QR code. This allows easy transmission of account configuration details. The goal of this library is to help with generating such QR codes by formatting the information as required by the [format for Thunderbird for Android](https://github.com/thunderbird/thunderbird-android/blob/8c2c036d36344f56128fcad77a5f355336ad67cc/feature/migration/qrcode/qr-code-format.md).
+Thunderbird for Android allows [importing accounts through a QR code](https://support.mozilla.org/kb/thunderbird-android-import#w_import-the-desktop-settings-into-thunderbird-for-android). This allows easy transmission of account configuration details. The goal of this library is to help with generating such QR codes by formatting the information as required by the [format for Thunderbird for Android](https://github.com/thunderbird/thunderbird-android/blob/8c2c036d36344f56128fcad77a5f355336ad67cc/feature/migration/qrcode/qr-code-format.md).
 
 It does, however, not include any actual QR generation capabilities, you can choose almost any library that can encode an arbitrary string as data. Note that you might have to appropriately encode the string first, so UTF-8 code points are properly transmitted.
 
