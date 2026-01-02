@@ -29,5 +29,16 @@
     "c8": "^10.1.3",
     "eslint": "^9.39.2",
     "qr": "^0.5.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freaktechnik/thunderbird-account-qr-code.git"
+  },
+  "bugs": {
+    "url": "https://github.com/freaktechnik/thunderbird-account-qr-code/issues"
+  },
+  "homepage": "https://github.com/freaktechnik/thunderbird-account-qr-code#readme",
+  "publishConfig": {
+    "provenance": true
   }
 }
