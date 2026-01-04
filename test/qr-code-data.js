@@ -108,7 +108,7 @@ test("Encode multiple accounts", (t) => {
             incomingConnectionSecurity: CONNECTION_SECURITY.AlwaysStartTls,
             incomingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
             incomingUsername: "email@example.com",
-            incomingAccountName: null, // eslint-disable-line unicorn/no-null
+            incomingAccountName: "",
             incomingPassword: "hunter2",
             outgoingHostname: "smtp.example.com",
             outgoingPort: 465,
@@ -159,7 +159,7 @@ test("Encode multiple accounts", (t) => {
             CONNECTION_SECURITY.AlwaysStartTls,
             AUTHENTICATION_TYPE.PasswordCleartext,
             "email@example.com",
-            null, // eslint-disable-line unicorn/no-null
+            "",
             "hunter2",
         ],
         [ [
@@ -174,6 +174,265 @@ test("Encode multiple accounts", (t) => {
             [
                 "email@example.com",
                 "Test account 2",
+            ],
+        ] ],
+    ]);
+});
+
+test("Encode: omit account name but include password", (t) => {
+    const encoded = encodeAccounts([ {
+        incomingProtocol: INCOMING_PROTOCOL.IMAP,
+        incomingHostname: "imap.example.com",
+        incomingPort: 993,
+        incomingConnectionSecurity: CONNECTION_SECURITY.Tls,
+        incomingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
+        incomingUsername: "email@example.com",
+        incomingPassword: "hunter2",
+        outgoingHostname: "smtp.example.com",
+        outgoingPort: 465,
+        outgoingConnectionSecurity: CONNECTION_SECURITY.Tls,
+        outgoingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
+        outgoingUsername: "email@example.com",
+        identityEmailAddress: "email@example.com",
+        identityDisplayName: "Test account",
+    } ]);
+    const parsed = JSON.parse(encoded);
+    t.deepEqual(parsed, [
+        1,
+        [
+            1,
+            1,
+        ],
+        [
+            INCOMING_PROTOCOL.IMAP,
+            "imap.example.com",
+            993,
+            CONNECTION_SECURITY.Tls,
+            AUTHENTICATION_TYPE.PasswordCleartext,
+            "email@example.com",
+            "",
+            "hunter2",
+        ],
+        [ [
+            [
+                0,
+                "smtp.example.com",
+                465,
+                CONNECTION_SECURITY.Tls,
+                AUTHENTICATION_TYPE.PasswordCleartext,
+                "email@example.com",
+            ],
+            [
+                "email@example.com",
+                "Test account",
+            ],
+        ] ],
+    ]);
+});
+
+test("Encode: optimize size with a password", (t) => {
+    const encoded = encodeAccounts([ {
+        incomingProtocol: INCOMING_PROTOCOL.IMAP,
+        incomingHostname: "imap.example.com",
+        incomingPort: 993,
+        incomingConnectionSecurity: CONNECTION_SECURITY.Tls,
+        incomingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
+        incomingUsername: "email2@example.com",
+        incomingAccountName: "email@example.com",
+        incomingPassword: "hunter2",
+        outgoingHostname: "smtp.example.com",
+        outgoingPort: 465,
+        outgoingConnectionSecurity: CONNECTION_SECURITY.Tls,
+        outgoingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
+        outgoingUsername: "email@example.com",
+        identityEmailAddress: "email@example.com",
+        identityDisplayName: "Test account",
+    } ]);
+    const parsed = JSON.parse(encoded);
+    t.deepEqual(parsed, [
+        1,
+        [
+            1,
+            1,
+        ],
+        [
+            INCOMING_PROTOCOL.IMAP,
+            "imap.example.com",
+            993,
+            CONNECTION_SECURITY.Tls,
+            AUTHENTICATION_TYPE.PasswordCleartext,
+            "email2@example.com",
+            "",
+            "hunter2",
+        ],
+        [ [
+            [
+                0,
+                "smtp.example.com",
+                465,
+                CONNECTION_SECURITY.Tls,
+                AUTHENTICATION_TYPE.PasswordCleartext,
+                "email@example.com",
+            ],
+            [
+                "email@example.com",
+                "Test account",
+            ],
+        ] ],
+    ]);
+});
+
+test("Encode: optimize size without password but with account name", (t) => {
+    const encoded = encodeAccounts([ {
+        incomingProtocol: INCOMING_PROTOCOL.IMAP,
+        incomingHostname: "imap.example.com",
+        incomingPort: 993,
+        incomingConnectionSecurity: CONNECTION_SECURITY.Tls,
+        incomingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
+        incomingUsername: "email2@example.com",
+        incomingAccountName: "email@example.com",
+        incomingPassword: null, // eslint-disable-line unicorn/no-null
+        outgoingHostname: "smtp.example.com",
+        outgoingPort: 465,
+        outgoingConnectionSecurity: CONNECTION_SECURITY.Tls,
+        outgoingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
+        outgoingUsername: "email@example.com",
+        outgoingPassword: null, // eslint-disable-line unicorn/no-null
+        identityEmailAddress: "email@example.com",
+        identityDisplayName: "Test account",
+    } ]);
+    const parsed = JSON.parse(encoded);
+    t.deepEqual(parsed, [
+        1,
+        [
+            1,
+            1,
+        ],
+        [
+            INCOMING_PROTOCOL.IMAP,
+            "imap.example.com",
+            993,
+            CONNECTION_SECURITY.Tls,
+            AUTHENTICATION_TYPE.PasswordCleartext,
+            "email2@example.com",
+        ],
+        [ [
+            [
+                0,
+                "smtp.example.com",
+                465,
+                CONNECTION_SECURITY.Tls,
+                AUTHENTICATION_TYPE.PasswordCleartext,
+                "email@example.com",
+            ],
+            [
+                "email@example.com",
+                "Test account",
+            ],
+        ] ],
+    ]);
+});
+
+test("Encode: optimize size with empty password and account name", (t) => {
+    const encoded = encodeAccounts([ {
+        incomingProtocol: INCOMING_PROTOCOL.IMAP,
+        incomingHostname: "imap.example.com",
+        incomingPort: 993,
+        incomingConnectionSecurity: CONNECTION_SECURITY.Tls,
+        incomingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
+        incomingUsername: "email2@example.com",
+        incomingAccountName: null, // eslint-disable-line unicorn/no-null
+        incomingPassword: null, // eslint-disable-line unicorn/no-null
+        outgoingHostname: "smtp.example.com",
+        outgoingPort: 465,
+        outgoingConnectionSecurity: CONNECTION_SECURITY.Tls,
+        outgoingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
+        outgoingUsername: "email@example.com",
+        outgoingPassword: null, // eslint-disable-line unicorn/no-null
+        identityEmailAddress: "email@example.com",
+        identityDisplayName: "Test account",
+    } ]);
+    const parsed = JSON.parse(encoded);
+    t.deepEqual(parsed, [
+        1,
+        [
+            1,
+            1,
+        ],
+        [
+            INCOMING_PROTOCOL.IMAP,
+            "imap.example.com",
+            993,
+            CONNECTION_SECURITY.Tls,
+            AUTHENTICATION_TYPE.PasswordCleartext,
+            "email2@example.com",
+        ],
+        [ [
+            [
+                0,
+                "smtp.example.com",
+                465,
+                CONNECTION_SECURITY.Tls,
+                AUTHENTICATION_TYPE.PasswordCleartext,
+                "email@example.com",
+            ],
+            [
+                "email@example.com",
+                "Test account",
+            ],
+        ] ],
+    ]);
+});
+
+test("Encode: optimize size with password but empty account name", (t) => {
+    const encoded = encodeAccounts([ {
+        incomingProtocol: INCOMING_PROTOCOL.IMAP,
+        incomingHostname: "imap.example.com",
+        incomingPort: 993,
+        incomingConnectionSecurity: CONNECTION_SECURITY.Tls,
+        incomingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
+        incomingUsername: "email2@example.com",
+        incomingAccountName: null, // eslint-disable-line unicorn/no-null
+        incomingPassword: "hunter2",
+        outgoingHostname: "smtp.example.com",
+        outgoingPort: 465,
+        outgoingConnectionSecurity: CONNECTION_SECURITY.Tls,
+        outgoingAuthenticationType: AUTHENTICATION_TYPE.PasswordCleartext,
+        outgoingUsername: "email@example.com",
+        outgoingPassword: "hunter2",
+        identityEmailAddress: "email@example.com",
+        identityDisplayName: "Test account",
+    } ]);
+    const parsed = JSON.parse(encoded);
+    t.deepEqual(parsed, [
+        1,
+        [
+            1,
+            1,
+        ],
+        [
+            INCOMING_PROTOCOL.IMAP,
+            "imap.example.com",
+            993,
+            CONNECTION_SECURITY.Tls,
+            AUTHENTICATION_TYPE.PasswordCleartext,
+            "email2@example.com",
+            "",
+            "hunter2",
+        ],
+        [ [
+            [
+                0,
+                "smtp.example.com",
+                465,
+                CONNECTION_SECURITY.Tls,
+                AUTHENTICATION_TYPE.PasswordCleartext,
+                "email@example.com",
+                "hunter2",
+            ],
+            [
+                "email@example.com",
+                "Test account",
             ],
         ] ],
     ]);

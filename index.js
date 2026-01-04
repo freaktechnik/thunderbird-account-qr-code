@@ -113,10 +113,6 @@ function optionalArrayItems(condition, items) {
     return items;
 }
 
-function isEmptyValue(value) {
-    return !value && (value === null || value === "");
-}
-
 /**
  * Build the IncomingServer element.
  *
@@ -124,6 +120,24 @@ function isEmptyValue(value) {
  * @returns {any[]}
  */
 function getIncomingServer(accountInfo) {
+    let { incomingAccountName } = accountInfo;
+    // If the account name is omitted, the email address of the first
+    // identity is used.
+    if(accountInfo.incomingAccountName === accountInfo.identityEmailAddress) {
+        incomingAccountName = "";
+    }
+    // null is treated the same as an empty string, and the empty string is
+    // shorter in JSON.
+    if(accountInfo.incomingAccountName === null) {
+        incomingAccountName = "";
+    }
+    // The account name and password section should be omitted
+    const shouldIncludeAccountNameAndPassword = accountInfo.incomingPassword || incomingAccountName;
+
+    // Make sure we have a valid empty value if we're providing a password.
+    if(incomingAccountName === undefined && shouldIncludeAccountNameAndPassword) {
+        incomingAccountName = "";
+    }
     return [
         accountInfo.incomingProtocol,
         accountInfo.incomingHostname,
@@ -131,8 +145,8 @@ function getIncomingServer(accountInfo) {
         accountInfo.incomingConnectionSecurity,
         accountInfo.incomingAuthenticationType,
         accountInfo.incomingUsername,
-        ...optionalArrayItems(accountInfo.incomingAccountName || isEmptyValue(accountInfo.incomingAccountName), [
-            accountInfo.incomingAccountName,
+        ...optionalArrayItems(shouldIncludeAccountNameAndPassword, [
+            incomingAccountName,
             ...optionalArrayItems(accountInfo.incomingPassword, [ accountInfo.incomingPassword ]),
         ]),
     ];
@@ -212,10 +226,10 @@ function getAccountArrays(accountInfo) {
  *
  * @param {AccountInfo[]} accountInfos
  * @param {number} [sequenceNumber=1] - The (1-based) position of this QR code
- * in a sequence of QR codes. When only transmitting a single account this can
- * be safely omitted.
+ *   in a sequence of QR codes. When only transmitting a single account this can
+ *   be safely omitted.
  * @param {number} [sequenceTotal=1] - The total QR codes in the sequence. When
- * only transmitting a single account this can be safely omitted.
+ *   only transmitting a single account this can be safely omitted.
  * @returns {string}
  */
 /* eslint-enable no-secrets/no-secrets */
