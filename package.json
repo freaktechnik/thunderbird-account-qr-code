@@ -18,7 +18,7 @@
   "scripts": {
     "test": "c8 ava",
     "lint": "eslint .",
-    "report": "c8 report --reporter lcov"
+    "report": "c8 report --reporter lcov,cobertura"
   },
   "files": [
     "index.js"
