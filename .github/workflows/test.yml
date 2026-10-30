@@ -1,10 +1,13 @@
 name: test
 on: [push, pull_request]
+permissions: {}
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
             node-version: 'lts/*'
@@ -17,6 +20,8 @@ jobs:
       - lint
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version: 'lts/*'
