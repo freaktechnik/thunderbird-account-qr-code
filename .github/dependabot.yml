@@ -8,6 +8,8 @@ updates:
       prefix: "chore:"
     open-pull-requests-limit: 5
     versioning-strategy: "increase"
+    cooldown:
+      default-days: 7
     groups:
       eslint-configs:
         dependency-type: "development"
@@ -19,3 +21,5 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "chore:"
+    cooldown:
+      default-days: 7
